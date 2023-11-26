@@ -124,7 +124,7 @@ void printArr(int size, int arr[]) {
 int main() {
     setlocale(LC_ALL, "RU");
     srand(time(0));
-    int numOption, numSort, i;
+    int numOption, numSort, i; //переменная i нужна для выхода из основного циклв программы, используется в конце
     const int size = 100;
     int arr[size];
     cout << "Элементы массива: ";
@@ -135,7 +135,7 @@ int main() {
     while (true) {
         time_point<steady_clock, duration<__int64, ratio<1, 1000000000>>> start, end;
         nanoseconds result;
-
+        //Окно выбора задания
         cout << endl << endl << "Выберете опцию: " << endl <<
             "1) Сортировка массива" << endl <<
             "2) Нахождение минимального или максимального значения" << endl <<
@@ -153,24 +153,29 @@ int main() {
                 "1) Insert sort" << endl <<
                 "2) Shell sort" << endl << "Введите способ: ";
             cin >> numSort;
-            if (numSort == 1) {
-                start = steady_clock::now();
-                Insert(size, arr);
-                end = steady_clock::now();
-                result = duration_cast<nanoseconds>(end - start);
-                cout << "\nСортировка заняла " << result.count() << " наносек" << endl;
-                cout << "\nОтсортированный массив: ";
-                printArr(size, arr);
-            }
-            else if (numSort == 2) {
-                start = steady_clock::now();
-                Shell(size, arr);
-                end = steady_clock::now();
-                result = duration_cast<nanoseconds>(end - start);
-                cout << "Сортировка заняла " << result.count() << " наносек" << endl;
-                cout << "\nОтсортированный массив: ";
-                for (int i = 0; i < size; i++)
-                    cout << arr[i] << " ";
+            switch (numSort){
+                case 1:
+                    start = steady_clock::now();
+                    Insert(size, arr);
+                    end = steady_clock::now();
+                    result = duration_cast<nanoseconds>(end - start);
+                    cout << "\nСортировка заняла " << result.count() << " наносек" << endl;
+                    cout << "\nОтсортированный массив: ";
+                    printArr(size, arr);
+                    break;
+
+                case 2:
+                    start = steady_clock::now();
+                    Shell(size, arr);
+                    end = steady_clock::now();
+                    result = duration_cast<nanoseconds>(end - start);
+                    cout << "Сортировка заняла " << result.count() << " наносек" << endl;
+                    cout << "\nОтсортированный массив: ";
+                    for (int i = 0; i < size; i++)
+                        cout << arr[i] << " ";
+                    break;
+                default:
+                    cout << "\nНеверный способ";
             }
         }
         else if (numOption == 2) {
@@ -242,10 +247,6 @@ int main() {
                 cout << arr[i] << " ";
 
         }
-        else if (numOption == 9) {
-            cout << "\nПока-пока:)";
-            break;
-        }
         else if (numOption == 7) {
             Insert(size, arr);
             int val7;
@@ -278,6 +279,10 @@ int main() {
                 arr[i] = rand() % 198 - 99;
                 cout << arr[i] << " ";
             }
+        }
+        else if (numOption == 9) {
+            cout << "\nПока-пока:)";
+            break;
         }
         else {
             cout << "\nНеверный ввод числа\n";
