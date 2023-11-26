@@ -4,7 +4,7 @@
 
 using namespace std;
 using namespace chrono;
-//Sort functions
+//Сортировки
 void Insert(int size, int arr[]) {
     int i, buff, j;
     for (i = 1; i < size; i++) {
@@ -37,7 +37,7 @@ void Shell(int size, int arr[]) {
 
 
 }
-
+//Бинарный поиск
 int bSearch(int size, int arr[], int val) {
     int l = 0;
     int r = size - 1;
@@ -56,8 +56,8 @@ int bSearch(int size, int arr[], int val) {
     }
     return -1;
 }
-
-void srZnach(int size, int arr[]) {
+//Нахождение среднего мин. и макс.
+void average(int size, int arr[]) {
     time_point<steady_clock, duration<__int64, ratio<1, 1000000000>>> start, end;
     nanoseconds result;
     int index;
@@ -67,7 +67,6 @@ void srZnach(int size, int arr[]) {
     int srMinMax = round(((min + max) / 2.0));
     cout << endl << "Среднее значение: " << srMinMax << endl;
     start = steady_clock::now();
-    //Бинарный поиск
     index = bSearch(size, arr, srMinMax);
     if (index == -1) {
         cout << "Числа " << srMinMax << " нет в массиве" << endl;
@@ -79,8 +78,8 @@ void srZnach(int size, int arr[]) {
     result = duration_cast<nanoseconds>(end - start);
     cout << "Время поиска " << result.count() << " наносек" << endl;
 }
-
-void chisloA(int size, int arr[], int A4, int& count4) {
+//Количество чисел меньше A
+void numA(int size, int arr[], int A4, int& count4) {
     Insert(size, arr);
     int ind = bSearch(size, arr, A4);
     ind++;
@@ -90,8 +89,8 @@ void chisloA(int size, int arr[], int A4, int& count4) {
         }
     }
 }
-
-void chisloB(int size, int arr[], int B5, int& count5) {
+//Количесиво чисел больше B
+void numB(int size, int arr[], int B5, int& count5) {
     Insert(size, arr);
     int ind = bSearch(size, arr, B5);
     ind++;
@@ -102,7 +101,7 @@ void chisloB(int size, int arr[], int B5, int& count5) {
     }
 }
 
-void regSearch(int size, int arr[], int val) {
+void NormalSearch(int size, int arr[], int val) {
     for (int i = 0; i < size - 1; i++) {
         if (arr[i] == val) {
             cout << "Индекс числа: " << i << endl;
@@ -111,11 +110,11 @@ void regSearch(int size, int arr[], int val) {
     }
 
 }
-
-void obmen(int size, int arr[], int intA, int intB) {
+//Обмен элементов по индексу
+void exchange(int size, int arr[], int intA, int intB) {
     swap(arr[intA], arr[intB]);
 }
-
+//Вывод массива
 void printArr(int size, int arr[]) {
     for (int i = 0; i < size; i++)
         cout << arr[i] << " ";
@@ -171,8 +170,7 @@ int main() {
                     result = duration_cast<nanoseconds>(end - start);
                     cout << "Сортировка заняла " << result.count() << " наносек" << endl;
                     cout << "\nОтсортированный массив: ";
-                    for (int i = 0; i < size; i++)
-                        cout << arr[i] << " ";
+                    printArr(size, arr);
                     break;
                 default:
                     cout << "\nНеверный способ";
@@ -215,20 +213,20 @@ int main() {
             }
         }
         else if (numOption == 3) {
-            srZnach(size, arr);
+            average(size, arr);
         }
         else if (numOption == 4) {
             int A4, count4 = 0;
             cout << "Введите число: ";
             cin >> A4;
-            chisloA(size, arr, A4, count4);
+            numA(size, arr, A4, count4);
             cout << endl << "\nКоличество элементво меньше 'A' = " << count4 << endl;
         }
         else if (numOption == 5) {
             int B5, count5 = 0;
             cout << "Введите число: ";
             cin >> B5;
-            chisloB(size, arr, B5, count5);
+            numB(size, arr, B5, count5);
             cout << endl << "\nКоличество элементво больше 'B' = " << count5 << endl;
         }
         else if (numOption == 6) {
@@ -238,13 +236,12 @@ int main() {
             cout << "\nВведите второй индекс: ";
             cin >> intB;
             start = steady_clock::now();
-            obmen(size, arr, intA, intB);
+            exchange(size, arr, intA, intB);
             end = steady_clock::now();
             result = duration_cast<nanoseconds>(end - start);
             cout << "\nОбмен занял " << result.count() << " наносек";
             cout << "\nМассив после обмена: ";
-            for (int i = 0; i < size; i++)
-                cout << arr[i] << " ";
+            printArr(size, arr);
 
         }
         else if (numOption == 7) {
@@ -267,7 +264,7 @@ int main() {
             cout << "Бинарный поиск занял " << result.count() << " наносек" << endl;
 
             start = steady_clock::now();
-            regSearch(size, arr, val7);
+            NormalSearch(size, arr, val7);
             end = steady_clock::now();
             result = duration_cast<nanoseconds>(end - start);
             cout << "Перебор занял " << result.count() << " наносек" << endl;
