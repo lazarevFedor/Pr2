@@ -6,8 +6,8 @@ using namespace std;
 using namespace chrono;
 //Сортировки
 void Insert(int size, int arr[]) {
-    int i, buff, j;
-    for (i = 1; i < size; i++) {
+    int buff, j;
+    for (int i = 1; i < size; i++) {
         buff = arr[i];
         j = i - 1;
         while (j >= 0 && arr[j] > buff) {
@@ -56,63 +56,43 @@ int bSearch(int size, int arr[], int val) {
     }
     return -1;
 }
-//Нахождение среднего мин. и макс.
-void average(int size, int arr[]) {
-    time_point<steady_clock, duration<__int64, ratio<1, 1000000000>>> start, end;
-    nanoseconds result;
-    int index;
-    Insert(size, arr);
-    int min = arr[0];
-    int max = arr[size - 1];
-    int srMinMax = round(((min + max) / 2.0));
-    cout << endl << "Среднее значение: " << srMinMax << endl;
-    start = steady_clock::now();
-    index = bSearch(size, arr, srMinMax);
-    if (index == -1) {
-        cout << "Числа " << srMinMax << " нет в массиве" << endl;
-    }
-    else {
-        cout << "Индекс числа " << srMinMax << " - " << index << endl;
-    }
-    end = steady_clock::now();
-    result = duration_cast<nanoseconds>(end - start);
-    cout << "Время поиска " << result.count() << " наносек" << endl;
-}
 //Количество чисел меньше A
-void numA(int size, int arr[], int A4, int& count4) {
+void numA(int size, int arr[], int& val, int& count) {
+    count = 0;
     Insert(size, arr);
-    int ind = bSearch(size, arr, A4);
+    int ind = bSearch(size, arr, val);
     ind++;
     for (int i = 0; i < ind; i++) {
-        if (arr[i] < A4) {
-            count4 = count4 + 1;
+        if (arr[i] < val) {
+            count += 1;
         }
     }
 }
 //Количесиво чисел больше B
-void numB(int size, int arr[], int B5, int& count5) {
+void numB(int size, int arr[], int& val, int& count) {
+    count = 0;
     Insert(size, arr);
-    int ind = bSearch(size, arr, B5);
+    int ind = bSearch(size, arr, val);
     ind++;
     for (int i = ind; i < size; i++) {
-        if (arr[i] > B5) {
-            count5 = count5 + 1;
+        if (arr[i] > val) {
+            count += 1;
         }
     }
 }
-
-void NormalSearch(int size, int arr[], int val) {
+// Поиск перебором
+void NormalSearch(int size, int arr[], int& val) {
     for (int i = 0; i < size - 1; i++) {
         if (arr[i] == val) {
-            cout << "Индекс числа: " << i << endl;
+            cout << "Индекс числа: " << i << "\n";
             break;
         }
     }
 
 }
 //Обмен элементов по индексу
-void exchange(int size, int arr[], int intA, int intB) {
-    swap(arr[intA], arr[intB]);
+void exchange(int size, int arr[], int& indexA, int& indexB) {
+    swap(arr[indexA], arr[indexB]);
 }
 //Вывод массива
 void printArr(int size, int arr[]) {
@@ -121,153 +101,158 @@ void printArr(int size, int arr[]) {
 }
 
 int main() {
+    time_point<steady_clock, duration<__int64, ratio<1, 1000000000>>> start, end;
+    nanoseconds result;
     setlocale(LC_ALL, "RU");
     srand(time(0));
-    int numOption, numSort, i; //переменная i нужна для выхода из основного циклв программы, используется в конце
+    int numOption, choise, val, min, max, ind, indexA, indexB, count = 0;
     const int size = 100;
     int arr[size];
+
     cout << "Элементы массива: ";
     for (int i = 0; i < size; i++) {
         arr[i] = rand() % 198 - 99;
         cout << arr[i] << " ";
     }
+
     while (true) {
-        time_point<steady_clock, duration<__int64, ratio<1, 1000000000>>> start, end;
-        nanoseconds result;
-        //Окно выбора задания
-        cout << endl << endl << "Выберете опцию: " << endl <<
-            "1) Сортировка массива" << endl <<
-            "2) Нахождение минимального или максимального значения" << endl <<
-            "3) Среднее значение минимального и максимального значения" << endl <<
-            "4) Количество элементво, меньшее числа 'A'" << endl <<
-            "5) Количество элементов больше числа 'B'" << endl <<
-            "6) Обмен элементов" << endl <<
-            "7) Поиск числа в массиве" << endl <<
-            "8) Изменить массив " << endl <<
-            "9) Выход из программы" << endl <<
+        cout << "\n\nВыберете опцию : \n" <<
+            "1) Сортировка массива\n" <<
+            "2) Нахождение минимального или максимального значения\n" <<
+            "3) Среднее значение минимального и максимального значения\n" <<
+            "4) Количество элементво, меньшее числа 'A'\n" <<
+            "5) Количество элементов больше числа 'B'\n" <<
+            "6) Обмен элементов\n" <<
+            "7) Поиск числа в массиве\n" <<
+            "8) Изменить массив\n" <<
+            "9) Выход из программы\n" <<
             "--->>> ";
         cin >> numOption;
-        if (numOption == 1) {
-            cout << endl << endl << "Выберете способ сортировки: " << endl <<
-                "1) Insert sort" << endl <<
-                "2) Shell sort" << endl << "Введите способ: ";
-            cin >> numSort;
-            switch (numSort){
-                case 1:
-                    start = steady_clock::now();
-                    Insert(size, arr);
-                    end = steady_clock::now();
-                    result = duration_cast<nanoseconds>(end - start);
-                    cout << "\nСортировка заняла " << result.count() << " наносек" << endl;
-                    cout << "\nОтсортированный массив: ";
-                    printArr(size, arr);
-                    break;
 
-                case 2:
-                    start = steady_clock::now();
-                    Shell(size, arr);
-                    end = steady_clock::now();
-                    result = duration_cast<nanoseconds>(end - start);
-                    cout << "Сортировка заняла " << result.count() << " наносек" << endl;
-                    cout << "\nОтсортированный массив: ";
-                    printArr(size, arr);
-                    break;
-                default:
-                    cout << "\nНеверный способ";
+        if (numOption == 1) {
+            cout << "\n\nВыберете способ сортировки:\n" <<
+                "1) Insert sort\n" <<
+                "2) Shell sort" << "\nВведите способ: ";
+            cin >> choise;
+            switch (choise) {
+            case 1:
+                start = steady_clock::now();
+                Insert(size, arr);
+                end = steady_clock::now();
+                result = duration_cast<nanoseconds>(end - start);
+                cout << "\nСортировка заняла " << result.count() << " наносек\n\nОтсортированный массив:";
+                printArr(size, arr);
+                break;
+
+            case 2:
+                start = steady_clock::now();
+                Shell(size, arr);
+                end = steady_clock::now();
+                result = duration_cast<nanoseconds>(end - start);
+                cout << "Сортировка заняла " << result.count() << " наносек\n";
+                cout << "\nОтсортированный массив: ";
+                printArr(size, arr);
+                break;
+            default:
+                cout << "\nНеверный способ";
             }
         }
         else if (numOption == 2) {
-            int h;
-            int min, max;
-            while (true) {
-                cout << "Отсортировать массив?(1 - да, 2 - нет)\n" << "Введите ответ: ";
-                cin >> h;
-                switch (h) {
-                case 1:
-                    Insert(size, arr);
-                    start = steady_clock::now();
-                    min = arr[0];
-                    max = arr[size - 1];
-                    end = steady_clock::now();
-                    result = duration_cast<nanoseconds>(end - start);
-                    cout << "\nМинимальное значение: " << min << endl << "Максимальное значение: " << max << endl;
-                    cout << "Время нахождения максимального и минимального значений:  " << result.count() << " наносек" << endl;
-                    break;
-                case 2:
-                    min = arr[0];
-                    max = arr[0];
-                    start = steady_clock::now();
-                    for (int i = 1; i < size; i++) {
-                        if (arr[i] < min)
-                            min = arr[i];
-                        if (arr[i] > max)
-                            max = arr[i];
-                    }
-
-                    end = steady_clock::now();
-                    cout << "\nМинимальное значение: " << min << endl << "Максимальное значение: " << max << endl;
-                    result = duration_cast<nanoseconds>(end - start);
-                    cout << "Время нахождения максимального и минимального значений:  " << result.count() << " наносек" << endl;
-                    break;
-                }
+            // В неотсортированном
+            min = arr[0];
+            max = arr[0];
+            start = steady_clock::now();
+            for (int i = 1; i < size; i++) {
+                if (arr[i] < min)
+                    min = arr[i];
+                if (arr[i] > max)
+                    max = arr[i];
             }
+
+            end = steady_clock::now();
+            cout << "\nМинимальное значение: " << min << "\nМаксимальное значение: " << max << "\n";
+            result = duration_cast<nanoseconds>(end - start);
+            cout << "Время нахождения в неотсортированном массиве :  " << result.count() << " наносек\n";
+            // В отсортированном
+            Insert(size, arr);
+            start = steady_clock::now();
+            min = arr[0];
+            max = arr[size - 1];
+            end = steady_clock::now();
+            result = duration_cast<nanoseconds>(end - start);
+            cout << "\nМинимальное значение: " << min << "\nМаксимальное значение: " << max << "\n";
+            cout << "Время нахождения в отсортированном массиве :  " << result.count() << " наносек\n";
+            
+                    
         }
         else if (numOption == 3) {
-            average(size, arr);
+            Insert(size, arr);
+            min = arr[0];
+            max = arr[size - 1];
+            int avMinMax = round(((min + max) / 2.0));
+            cout << endl << "Среднее значение: " << avMinMax << endl;
+
+            start = steady_clock::now();
+            ind = bSearch(size, arr, avMinMax);
+            end = steady_clock::now();
+            result = duration_cast<nanoseconds>(end - start);
+
+            if (ind == -1) {
+                cout << "Числа " << avMinMax << " нет в массиве\nВремя поиска " << result.count() << " наносек\n";
+            }
+            else {
+                cout << "Индекс числа " << avMinMax << " = " << ind << "\nВремя поиска " << result.count() << " наносек\n";
+            }
         }
         else if (numOption == 4) {
-            int A4, count4 = 0;
             cout << "Введите число: ";
-            cin >> A4;
-            numA(size, arr, A4, count4);
-            cout << endl << "\nКоличество элементво меньше 'A' = " << count4 << endl;
+            cin >> val;
+            numA(size, arr, val, count);
+            cout << "\n\nКоличество элементво меньше 'A' = " << count << "\n";
         }
         else if (numOption == 5) {
-            int B5, count5 = 0;
             cout << "Введите число: ";
-            cin >> B5;
-            numB(size, arr, B5, count5);
-            cout << endl << "\nКоличество элементво больше 'B' = " << count5 << endl;
+            cin >> val;
+            numB(size, arr, val, count);
+            cout << "\n\nКоличество элементво больше 'B' = " << count << "\n";
         }
         else if (numOption == 6) {
-            int intA, intB;
             cout << "Введите первый индекс: ";
-            cin >> intA;
+            cin >> indexA;
             cout << "\nВведите второй индекс: ";
-            cin >> intB;
+            cin >> indexB;
+
             start = steady_clock::now();
-            exchange(size, arr, intA, intB);
+            exchange(size, arr, indexA, indexB);
             end = steady_clock::now();
             result = duration_cast<nanoseconds>(end - start);
             cout << "\nОбмен занял " << result.count() << " наносек";
-            cout << "\nМассив после обмена: ";
+            cout << "\nМассив после обмена : ";
             printArr(size, arr);
 
         }
         else if (numOption == 7) {
             Insert(size, arr);
-            int val7;
-            int index;
             cout << "\nВведите число: ";
-            cin >> val7;
+            cin >> val;
 
             start = steady_clock::now();
-            index = bSearch(size, arr, val7);
-            if (index == -1) {
-                cout << "Числа " << val7 << " нет в массиве" << endl;
+            ind = bSearch(size, arr, val);
+            if (ind == -1) {
+                cout << "Числа " << val << " нет в массиве" << "\n";
             }
             else {
-                cout << "Индекс числа " << val7 << " - " << index << endl;
+                cout << "Индекс числа " << val << " - " << ind << "\n";
             }
             end = steady_clock::now();
             result = duration_cast<nanoseconds>(end - start);
-            cout << "Бинарный поиск занял " << result.count() << " наносек" << endl;
+            cout << "Бинарный поиск занял " << result.count() << " наносек\n";
 
             start = steady_clock::now();
-            NormalSearch(size, arr, val7);
+            NormalSearch(size, arr, val);
             end = steady_clock::now();
             result = duration_cast<nanoseconds>(end - start);
-            cout << "Перебор занял " << result.count() << " наносек" << endl;
+            cout << "Перебор занял " << result.count() << " наносек\n";
         }
         else if (numOption == 8) {
             system("cls");
@@ -277,17 +262,13 @@ int main() {
                 cout << arr[i] << " ";
             }
         }
-        else if (numOption == 9) {
-            cout << "\nПока-пока:)";
-            break;
-        }
         else {
             cout << "\nНеверный ввод числа\n";
         }
-        cout << endl << "\nХотите выбрать опцию?(1 - да, 2 - нет(завершить программу))\n" << "Введите ответ: ";
-        cin >> i;
+        cout << "\nХотите выбрать опцию?(1 - да, 0 - нет(завершить программу))\n" << "Введите ответ: ";
+        cin >> numOption;
         cout << endl;
-        if (i != 1)break;
+        if (numOption != 1)break;
     }
     return 0;
 }
