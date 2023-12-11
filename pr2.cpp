@@ -105,7 +105,7 @@ int main() {
     nanoseconds result;
     setlocale(LC_ALL, "RU");
     srand(time(0));
-    int option, choise, value, min, max, index, indexA, indexB, count = 0;
+    int choise, value, min, max, index, indexA, indexB, count = 0;
     const int SIZE = 100;
     int arr[SIZE];
 
@@ -125,11 +125,11 @@ int main() {
             "6) Обмен элементов\n" <<
             "7) Поиск числа в массиве\n" <<
             "8) Изменить массив\n" <<
-            "9) Выход из программы\n" <<
+            "9) Выход в главное меню\n" <<
             "--->>> ";
-        cin >> option;
+        cin >> choise;
 
-        if (option == 1) {
+        if (choise == 1) {
             cout << "\n\nВыберете способ сортировки:\n" <<
                 "1) insert sort\n" <<
                 "2) shell sort" << "\nВведите способ: ";
@@ -157,7 +157,7 @@ int main() {
                 cout << "\nНеверный способ";
             }
         }
-        else if (option == 2) {
+        else if (choise == 2) {
             // В неотсортированном
             min = arr[0];
             max = arr[0];
@@ -182,10 +182,10 @@ int main() {
             result = duration_cast<nanoseconds>(end - start);
             cout << "\nМинимальное значение: " << min << "\nМаксимальное значение: " << max << "\n";
             cout << "Время нахождения в отсортированном массиве :  " << result.count() << " наносек\n";
-            
-                    
+
+
         }
-        else if (option == 3) {
+        else if (choise == 3) {
             insert(SIZE, arr);
             min = arr[0];
             max = arr[SIZE - 1];
@@ -204,19 +204,19 @@ int main() {
                 cout << "Индекс числа " << avMinMax << " = " << index << "\nВремя поиска " << result.count() << " наносек\n";
             }
         }
-        else if (option == 4) {
+        else if (choise == 4) {
             cout << "Введите число: ";
             cin >> value;
             lessValue(SIZE, arr, value, count);
             cout << "\n\nКоличество элементво меньше 'A' = " << count << "\n";
         }
-        else if (option == 5) {
+        else if (choise == 5) {
             cout << "Введите число: ";
             cin >> value;
             moreValue(SIZE, arr, value, count);
             cout << "\n\nКоличество элементво больше 'B' = " << count << "\n";
         }
-        else if (option == 6) {
+        else if (choise == 6) {
             cout << "Введите первый индекс: ";
             cin >> indexA;
             cout << "\nВведите второй индекс: ";
@@ -231,7 +231,7 @@ int main() {
             printArr(SIZE, arr);
 
         }
-        else if (option == 7) {
+        else if (choise == 7) {
             insert(SIZE, arr);
             cout << "\nВведите число: ";
             cin >> value;
@@ -254,7 +254,7 @@ int main() {
             result = duration_cast<nanoseconds>(end - start);
             cout << "Перебор занял " << result.count() << " наносек\n";
         }
-        else if (option == 8) {
+        else if (choise == 8) {
             system("cls");
             cout << "\nЭлементы массива: ";
             for (int i = 0; i < SIZE; i++) {
@@ -262,13 +262,12 @@ int main() {
                 cout << arr[i] << " ";
             }
         }
-        else {
-            cout << "\nНеверный ввод числа\n";
+        else if (choise == 9) {
+            exit(0);
         }
-        cout << "\nХотите выбрать опцию?(1 - да, 0 - нет(завершить программу))\n" << "Введите ответ: ";
-        cin >> option;
-        cout << endl;
-        if (option != 1)break;
+        else {
+            cout << "\nОшибка!Попробуйте снова\n";
+        }
     }
     return 0;
 }
